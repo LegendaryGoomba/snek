@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,7 +24,7 @@ public class SnekMain extends JFrame implements KeyListener {
   public static final int X_BOUND = 605;
   public static final int Y_BOUND = 555;
   public static int DIFFICULTY = 10;
-  private JPanel menu, game, head, body;
+  public JPanel menu, game, head, body, target;
   private JRadioButton easy, medium, hard;
   private JButton close, reset;
   public boolean inGame = true;
@@ -31,11 +32,12 @@ public class SnekMain extends JFrame implements KeyListener {
   public boolean up = true;
   public int x = START_X;
   public int y = START_Y;
+  public int targetX, targetY;
   private Thread snake;
 
   public SnekMain() { // constructor
     super("Snek");
-    //create the actionListener
+    // create the actionListener
     ActionListener al = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -56,12 +58,12 @@ public class SnekMain extends JFrame implements KeyListener {
           restart();
         } else if (e.getSource() == reset) {
           restart();
-        } else if (e.getSource() ==  close) {
+        } else if (e.getSource() == close) {
           System.exit(0);
         }
       }
     };
-    //create all the objects on the window
+    // create all the objects on the window
     this.setLayout(new BorderLayout());
     menu = new JPanel(new GridLayout(5, 1));
     game = new JPanel();
@@ -103,13 +105,14 @@ public class SnekMain extends JFrame implements KeyListener {
     head.setBounds(this.x, this.y, 20, 20);
     game.setFocusable(true);
     game.addKeyListener(this);
-    
+
     this.add(menu, BorderLayout.EAST);
     this.add(game, BorderLayout.CENTER);
     this.setResizable(false);
     this.addKeyListener(this);
 
-    // (new Thread(new Snake(this))).start();
+    getTarget();
+
     snake = new Thread(new Snake(this));
     snake.start();
   }// end constructor
@@ -166,6 +169,7 @@ public class SnekMain extends JFrame implements KeyListener {
   public void keyTyped(KeyEvent e) {
   }// end keyListener
 
+  // head moving up
   public synchronized void moveUp(int x, int y) {
     while (!this.up) {
       try {
@@ -179,6 +183,7 @@ public class SnekMain extends JFrame implements KeyListener {
     notifyAll();
   }
 
+  // head moving down
   public synchronized void moveDown(int x, int y) {
     while (!this.down) {
       try {
@@ -192,6 +197,7 @@ public class SnekMain extends JFrame implements KeyListener {
     notifyAll();
   }
 
+  // head moving lefy
   public synchronized void moveLeft(int x, int y) {
     while (!this.left) {
       try {
@@ -205,6 +211,7 @@ public class SnekMain extends JFrame implements KeyListener {
     notifyAll();
   }
 
+  // head moving right
   public synchronized void moveRight(int x, int y) {
     while (!this.right) {
       try {
@@ -218,6 +225,7 @@ public class SnekMain extends JFrame implements KeyListener {
     notifyAll();
   }
 
+  // this method restarts the game if the head goes out of bounds
   public void restart() {
     if (this.x < 0 || this.x > X_BOUND || this.y < 0 || this.y > this.Y_BOUND) {
       JOptionPane.showMessageDialog(null, "Game Over :(");
@@ -228,5 +236,22 @@ public class SnekMain extends JFrame implements KeyListener {
     this.down = false;
     this.right = false;
     this.left = false;
+    getTarget();
+  }
+
+  // this method removes previous target and acquires a new target to consume
+  public void getTarget() {
+    try {
+      game.remove(target);
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+    }
+    targetX = new Random().nextInt(this.X_BOUND - 20) + 3;
+    targetY = new Random().nextInt(this.Y_BOUND - 20) + 3;
+    target = new JPanel();
+    target.setBackground(new Color(255, 60, 60));
+    target.setBounds(targetX, targetY, 10, 10);
+    target.setVisible(true);
+    game.add(target);
   }
 }
