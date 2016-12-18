@@ -13,13 +13,15 @@ public class Snake implements Runnable {
   @Override
   public void run() {
     try {
-      Thread.sleep(500);
+      Thread.sleep(800);
     } catch (InterruptedException e) {
       e.printStackTrace();
       System.exit(1);
     }
     
     while (snek.inGame) {
+      System.out.println(snek.timer);
+      /*----------------------------ADD A PAUSE BUTTON----------------------------*/
       if (snek.up) {
         snek.y--;
         snek.moveUp(snek.x, snek.y);
@@ -43,13 +45,24 @@ public class Snake implements Runnable {
       // if you eat the target
       if (snek.targetX + 4 > snek.head.getX() && snek.targetX + 6 < snek.head.getX() + 20
           && snek.targetY + 4 > snek.head.getY() && snek.targetY + 6 < snek.head.getY() + 20) {
+        if (snek.up) {
+          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+        } else if (snek.down) {
+          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+        } else if (snek.left) {
+          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+        } else if (snek.right) {
+          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+        }
+        snek.score++;
         snek.getTarget();
       }
+      
       try {
         Thread.sleep(snek.DIFFICULTY);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-    }
+    }//end while
   }
 }
