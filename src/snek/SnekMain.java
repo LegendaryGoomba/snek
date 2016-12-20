@@ -188,6 +188,7 @@ public class SnekMain extends JFrame implements KeyListener {
 
   // head moving up
   public synchronized void moveUp(int x, int y) {
+    
     timer++;
     while (!this.up) {
       try {
@@ -208,6 +209,7 @@ public class SnekMain extends JFrame implements KeyListener {
     }
     repaint();
     notifyAll();
+    revalidate();
   }
 
   // head moving down
@@ -223,7 +225,7 @@ public class SnekMain extends JFrame implements KeyListener {
     head.setBounds(x, y, 20, 20);
     xCoords.add(x);
     yCoords.add(y);
-    for (int i = 0; i < snekBody.size(); i++) {
+    for (int i = 0; i < snekBody.size(); i++) { 
       if (i > 0) {
         snekBody.get(i).setBounds(xCoords.get(timer-(10*score))+5, yCoords.get(timer-(10*score)), BODY_WIDTH, BODY_HEIGHT);
       } else {
@@ -232,6 +234,7 @@ public class SnekMain extends JFrame implements KeyListener {
     }
     repaint();
     notifyAll();
+    revalidate();
   }
 
   // head moving left
@@ -256,6 +259,7 @@ public class SnekMain extends JFrame implements KeyListener {
     }
     repaint();
     notifyAll();
+    revalidate();
   }
 
   // head moving right
@@ -280,6 +284,7 @@ public class SnekMain extends JFrame implements KeyListener {
     }
     repaint();
     notifyAll();
+    revalidate();
   }
 
   // this method restarts the game if the head goes out of bounds
@@ -293,9 +298,9 @@ public class SnekMain extends JFrame implements KeyListener {
     this.down = false;
     this.right = false;
     this.left = false;
-    for(JPanel temp : snekBody){
-      game.remove(temp);
-    }
+//    for(JPanel temp : snekBody){
+//      game.remove(temp);
+//    }
     this.snekBody.removeAll(snekBody);
     this.xCoords.removeAll(xCoords);
     this.yCoords.removeAll(yCoords);
@@ -326,15 +331,11 @@ public class SnekMain extends JFrame implements KeyListener {
   //this method is supposed to add a body JPanel to the snake, for some reason, it works but
   //only half way.
   public void addBody(int x, int y) {
-    body = new JPanel();
-    body.setBackground(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
-    body.setVisible(true);
-    this.snekBody.add(body);
-    this.game.add(body);
-    body.setBounds(x*this.score, y*this.score, BODY_WIDTH, BODY_HEIGHT);
-//    for (JPanel jp : snekBody){
-//      this.game.add(jp);
-//    }
-    body = null;
+    snekBody.add(new JPanel());
+    snekBody.get(snekBody.size() - 1).setBackground(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
+    snekBody.get(snekBody.size() - 1).setVisible(true);
+    snekBody.get(snekBody.size() - 1).setBounds(x*score, y*score, BODY_WIDTH, BODY_HEIGHT);
+    game.add(snekBody.get(this.snekBody.size() - 1));
+    revalidate();
   }
 }
