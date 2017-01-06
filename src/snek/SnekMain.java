@@ -200,12 +200,15 @@ public class SnekMain extends JFrame implements KeyListener {
     head.setBounds(x, y, 20, 20);
     xCoords.add(x);
     yCoords.add(y);
-    for(int i = 0; i < snekBody.size(); i++) {
-      if (i > 0) {
-        snekBody.get(i).setBounds(xCoords.get(timer-(10*score))+5, yCoords.get(timer-(10*score))+10, BODY_WIDTH, BODY_HEIGHT);
-      } else {
-        snekBody.get(i).setBounds(xCoords.get(timer-10)+5, yCoords.get(timer-10)+10, BODY_WIDTH, BODY_HEIGHT);
-      }
+    for(JPanel i : snekBody) {
+      //this works better
+      i.setBounds(xCoords.get(timer-((score+1)*10))+5, yCoords.get(timer-((score+1)*10))+10, BODY_WIDTH, BODY_HEIGHT);
+      //than this
+//      if (i > 0) {
+//        snekBody.get(i).setBounds(xCoords.get(timer-(10*score))+5, yCoords.get(timer-(10*score))+10, BODY_WIDTH, BODY_HEIGHT);
+//      } else {
+//        snekBody.get(i).setBounds(xCoords.get(timer-10)+5, yCoords.get(timer-10)+10, BODY_WIDTH, BODY_HEIGHT);
+//      }
     }
     repaint();
     notifyAll();
@@ -308,6 +311,8 @@ public class SnekMain extends JFrame implements KeyListener {
     this.score = 0; //reset the score on restart
     this.scoreField.setText(Integer.toString(this.score));
     this.getTarget();
+    repaint();
+    revalidate();
   }
 
   // this method removes previous target and acquires a new target to consume
