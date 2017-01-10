@@ -21,6 +21,7 @@ public class Snake implements Runnable {
     
     while (snek.inGame) {
 //      System.out.println(snek.timer);
+//      System.out.println(snek.snekBody.size());
       /*----------------------------ADD A PAUSE BUTTON----------------------------*/
       if (snek.up) {
         snek.y--;
