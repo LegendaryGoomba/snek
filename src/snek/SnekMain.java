@@ -201,16 +201,15 @@ public class SnekMain extends JFrame implements KeyListener {
     xCoords.add(x);
     yCoords.add(y);
     
-    //this works better
-    for(JPanel jp : snekBody) {
-      jp.setBounds(xCoords.get(timer-((score)*10))+5, yCoords.get(timer-((score+1)*10)), BODY_WIDTH, BODY_HEIGHT);
+//    for(JPanel jp : snekBody) {
+//      jp.setBounds(xCoords.get(timer-((score)*10))+5, yCoords.get(timer-((score+1)*10)), BODY_WIDTH, BODY_HEIGHT);
+//    }
+    //panels are showing up ontop of eachother, need to fix.
+    for (int i = 0; i < snekBody.size(); i++) {
+//    snekBody.get(i).setBounds(xCoords.get(timer-((score)*10))+5, yCoords.get(timer-((score+1)*10)+(i*10)), BODY_WIDTH, BODY_HEIGHT);
+      snekBody.get(i).setBounds(xCoords.get(timer-((i*10)+1))+5, yCoords.get(timer-((i*10)+1)), BODY_WIDTH, BODY_HEIGHT);
+
     }
-      //than this
-//      if (i > 0) {
-//        snekBody.get(i).setBounds(xCoords.get(timer-(10*score))+5, yCoords.get(timer-(10*score))+10, BODY_WIDTH, BODY_HEIGHT);
-//      } else {
-//        snekBody.get(i).setBounds(xCoords.get(timer-10)+5, yCoords.get(timer-10)+10, BODY_WIDTH, BODY_HEIGHT);
-//      }
     repaint();
     notifyAll();
     revalidate();
@@ -229,16 +228,12 @@ public class SnekMain extends JFrame implements KeyListener {
     head.setBounds(x, y, 20, 20);
     xCoords.add(x);
     yCoords.add(y);
-    for(JPanel jp : snekBody) {
-      jp.setBounds(xCoords.get(timer-((score)*10))+5, yCoords.get(timer-((score)*10)), BODY_WIDTH, BODY_HEIGHT);
+
+    for (int i = 0; i < snekBody.size(); i++) { 
+//      snekBody.get(i).setBounds(xCoords.get(timer-((score)*10))+5, yCoords.get(timer-((score)*10)+(i*10)), BODY_WIDTH, BODY_HEIGHT);
+      snekBody.get(i).setBounds(xCoords.get(timer-((i*10)+1))+5, yCoords.get(timer-((i*10)+1)), BODY_WIDTH, BODY_HEIGHT);
+
     }
-//    for (int i = 0; i < snekBody.size(); i++) { 
-//      if (i > 0) {
-//        snekBody.get(i).setBounds(xCoords.get(timer-(10*score))+5, yCoords.get(timer-(10*score)), BODY_WIDTH, BODY_HEIGHT);
-//      } else {
-//        snekBody.get(i).setBounds(xCoords.get(timer-10)+5, yCoords.get(timer-10), BODY_WIDTH, BODY_HEIGHT);
-//      }
-//    }
     repaint();
     notifyAll();
     revalidate();
@@ -257,9 +252,13 @@ public class SnekMain extends JFrame implements KeyListener {
     head.setBounds(x, y, 20, 20);
     xCoords.add(x);
     yCoords.add(y);
-    for(JPanel jp : snekBody) {
-      jp.setBounds(xCoords.get(timer-((score+1)*10)), yCoords.get(timer-((score)*10))+5, BODY_WIDTH, BODY_HEIGHT);
+    for (int i = 0; i < snekBody.size(); i++) { 
+      snekBody.get(i).setBounds(xCoords.get(timer-((i*10)+1))+10, yCoords.get(timer-((i*10)+1))+5, BODY_WIDTH, BODY_HEIGHT);
+//      snekBody.get(i).setBounds(xCoords.get(timer-((score)*10)+(i*10))+10, yCoords.get(timer-((score)*10))+5, BODY_WIDTH, BODY_HEIGHT);
     }
+//    for(JPanel jp : snekBody) {
+//      jp.setBounds(xCoords.get(timer-((score+1)*10)), yCoords.get(timer-((score)*10))+5, BODY_WIDTH, BODY_HEIGHT);
+//    }
 //    for(int i = 0; i < snekBody.size(); i++) {
 //      if (i > 0) {
 //        snekBody.get(i).setBounds(xCoords.get(timer-(10*score))+10, yCoords.get(timer-(10*score))+5, BODY_WIDTH, BODY_HEIGHT);
@@ -285,9 +284,15 @@ public class SnekMain extends JFrame implements KeyListener {
     head.setBounds(x, y, 20, 20);
     xCoords.add(x);
     yCoords.add(y);
-    for(JPanel jp : snekBody) {
-      jp.setBounds(xCoords.get(timer-((score)*10)), yCoords.get(timer-((score)*10))+5, BODY_WIDTH, BODY_HEIGHT);
+    for (int i = 0; i < snekBody.size(); i++) {
+//      snekBody.get(i).setBounds(xCoords.get(timer-((score)*10)+(i*10)), yCoords.get(timer-((score)*10))+5, BODY_WIDTH, BODY_HEIGHT);
+//   works sort of   snekBody.get(i).setBounds(xCoords.get(timer-(score*(i*10))-1), yCoords.get(timer-(score*(i*10))-1)+5, BODY_WIDTH, BODY_HEIGHT);
+      snekBody.get(i).setBounds(xCoords.get(timer-((i*10)+1)), yCoords.get(timer-((i*10)+1))+5, BODY_WIDTH, BODY_HEIGHT);
+
     }
+//    for(JPanel jp : snekBody) {
+//      jp.setBounds(xCoords.get(timer-((score)*10)), yCoords.get(timer-((score)*10))+5, BODY_WIDTH, BODY_HEIGHT);
+//    }
 //    for(int i = 0; i < snekBody.size(); i++) {
 //      if (i > 0) {
 //        snekBody.get(i).setBounds(xCoords.get(timer-(10*score)), yCoords.get(timer-(10*score))+5, BODY_WIDTH, BODY_HEIGHT);
@@ -349,8 +354,9 @@ public class SnekMain extends JFrame implements KeyListener {
     snekBody.add(new JPanel());
     snekBody.get(snekBody.size() - 1).setBackground(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
     snekBody.get(snekBody.size() - 1).setVisible(true);
-    snekBody.get(snekBody.size() - 1).setBounds(x*score, y*score, BODY_WIDTH, BODY_HEIGHT);
+    snekBody.get(snekBody.size() - 1).setBounds(x, y, BODY_WIDTH, BODY_HEIGHT);
     game.add(snekBody.get(this.snekBody.size() - 1));
+    repaint();
     revalidate();
   }
 }
