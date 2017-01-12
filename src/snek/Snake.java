@@ -44,20 +44,36 @@ public class Snake implements Runnable {
       }
 
       // if you eat the target
-      if (snek.targetX + 4 > snek.head.getX() && snek.targetX + 6 < snek.head.getX() + 20
-          && snek.targetY + 4 > snek.head.getY() && snek.targetY + 6 < snek.head.getY() + 20) {
+
+      if ((snek.head.getX() >= snek.targetX && snek.head.getX() <= snek.targetX + 10) && 
+          (snek.head.getY() >= snek.targetY && snek.head.getY() <= snek.targetY + 10)) {
         if (snek.up) {
-          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+          snek.addBody(snek.xCoords.get(snek.timer-1), snek.yCoords.get(snek.timer-1));
         } else if (snek.down) {
-          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+          snek.addBody(snek.xCoords.get(snek.timer-1), snek.yCoords.get(snek.timer-1));
         } else if (snek.left) {
-          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+          snek.addBody(snek.xCoords.get(snek.timer-1), snek.yCoords.get(snek.timer-1));
         } else if (snek.right) {
-          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+          snek.addBody(snek.xCoords.get(snek.timer-1), snek.yCoords.get(snek.timer-1));
         }
         snek.score++;
         snek.getTarget();
       }
+      //this works
+//      if (snek.targetX + 4 > snek.head.getX() && snek.targetX + 6 < snek.head.getX() + 20
+//          && snek.targetY + 4 > snek.head.getY() && snek.targetY + 6 < snek.head.getY() + 20) {
+//        if (snek.up) {
+//          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+//        } else if (snek.down) {
+//          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+//        } else if (snek.left) {
+//          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+//        } else if (snek.right) {
+//          snek.addBody(snek.xCoords.get(snek.timer-20), snek.yCoords.get(snek.timer-20));
+//        }
+//        snek.score++;
+//        snek.getTarget();
+//      }
       
       try {
         Thread.sleep(snek.DIFFICULTY);
