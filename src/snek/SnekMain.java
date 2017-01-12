@@ -284,7 +284,6 @@ public class SnekMain extends JFrame implements KeyListener {
     if (this.x < 0 || this.x > X_BOUND || this.y < 0 || this.y > this.Y_BOUND) {
       JOptionPane.showMessageDialog(null, "Game Over :(");
     }
-//    this.game.repaint();
     this.x = START_X;
     this.y = START_Y;
     this.up = true;
@@ -292,14 +291,21 @@ public class SnekMain extends JFrame implements KeyListener {
     this.right = false;
     this.left = false;
     this.snekBody.removeAll(snekBody);
+//    for (JPanel jp : this.snekBody) {
+//      this.snekBody.remove(jp);
+//    }
+//    for (int i = 1; i < snekBody.size(); i++) {
+//      snekBody.remove(i);
+//    }
+    this.snekBody.add(head);
     this.xCoords.removeAll(xCoords);
     this.yCoords.removeAll(yCoords);
-    this.timer = 0;
     this.score = 0; //reset the score on restart
     this.scoreField.setText(Integer.toString(this.score));
     this.getTarget();
     repaint();
     revalidate();
+    this.timer = 0;
   }
 
   // this method removes previous target and acquires a new target to consume

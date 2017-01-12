@@ -44,9 +44,9 @@ public class Snake implements Runnable {
       }
 
       // if you eat the target
-
-      if ((snek.head.getX() >= snek.targetX && snek.head.getX() <= snek.targetX + 10) && 
-          (snek.head.getY() >= snek.targetY && snek.head.getY() <= snek.targetY + 10)) {
+      //only works for top left corner of head colliding with the target
+      if (((snek.head.getX() >= snek.targetX && snek.head.getX() <= snek.targetX + 10) && 
+          (snek.head.getY() >= snek.targetY && snek.head.getY() <= snek.targetY + 10))) {
         if (snek.up) {
           snek.addBody(snek.xCoords.get(snek.timer-1), snek.yCoords.get(snek.timer-1));
         } else if (snek.down) {
