@@ -138,7 +138,7 @@ public class SnekMain extends JFrame implements KeyListener {
   }// end constructor
 
   @Override
-  public void keyPressed(KeyEvent e) {
+  public synchronized void keyPressed(KeyEvent e) {
     int keyCode = e.getKeyCode();
     switch (keyCode) {
     case KeyEvent.VK_W: //up
@@ -176,6 +176,11 @@ public class SnekMain extends JFrame implements KeyListener {
       break;
     case KeyEvent.VK_SPACE:
       this.restart();
+//      if(this.inGame){
+//        this.inGame = false;
+//      } else {
+//        this.inGame = true;
+//      }
     default:
       break;
     }
@@ -205,6 +210,7 @@ public class SnekMain extends JFrame implements KeyListener {
     yCoords.add(y);
     
     for (int i = 0; i < snekBody.size(); i++) {
+      //something in this is giving me an arrayindexoutofbouds exception
       snekBody.get(i).setBounds(xCoords.get(timer-((i*10)+1)), yCoords.get(timer-((i*10)+1)), BODY_WIDTH, BODY_HEIGHT);
     }
     repaint();
@@ -280,7 +286,8 @@ public class SnekMain extends JFrame implements KeyListener {
   }
 
   // this method restarts the game if the head goes out of bounds
-  public void restart() {
+  public synchronized void restart() {
+    timer++;
     if (this.x < 0 || this.x > X_BOUND || this.y < 0 || this.y > this.Y_BOUND) {
       JOptionPane.showMessageDialog(null, "Game Over :(");
     }
@@ -290,13 +297,13 @@ public class SnekMain extends JFrame implements KeyListener {
     this.down = false;
     this.right = false;
     this.left = false;
-    this.snekBody.removeAll(snekBody);
+//    this.snekBody.removeAll(snekBody);
 //    for (JPanel jp : this.snekBody) {
 //      this.snekBody.remove(jp);
 //    }
-//    for (int i = 1; i < snekBody.size(); i++) {
-//      snekBody.remove(i);
-//    }
+    for (int i = 1; i < snekBody.size(); i++) {
+      snekBody.remove(i);
+    }
     this.snekBody.add(head);
     this.xCoords.removeAll(xCoords);
     this.yCoords.removeAll(yCoords);
@@ -306,6 +313,7 @@ public class SnekMain extends JFrame implements KeyListener {
     repaint();
     revalidate();
     this.timer = 0;
+    notifyAll();
   }
 
   // this method removes previous target and acquires a new target to consume
@@ -315,7 +323,7 @@ public class SnekMain extends JFrame implements KeyListener {
     try {
       game.remove(target);
     } catch (NullPointerException e) {
-      e.printStackTrace();
+//      e.printStackTrace();
     }
     targetX = new Random().nextInt(this.X_BOUND - 20) + 3;
     targetY = new Random().nextInt(this.Y_BOUND - 20) + 3;
