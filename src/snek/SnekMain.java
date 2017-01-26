@@ -176,14 +176,9 @@ public class SnekMain extends JFrame implements KeyListener {
       break;
     case KeyEvent.VK_SPACE:
       this.restart();
-//      if(this.inGame){
-//        this.inGame = false;
-//      } else {
-//        this.inGame = true;
-//      }
     default:
       break;
-    }
+    }//end switch
   }
 
   @Override
@@ -287,32 +282,36 @@ public class SnekMain extends JFrame implements KeyListener {
 
   // this method restarts the game if the head goes out of bounds
   public synchronized void restart() {
-    timer++;
-    if (this.x < 0 || this.x > X_BOUND || this.y < 0 || this.y > this.Y_BOUND) {
-      JOptionPane.showMessageDialog(null, "Game Over :(");
-    }
+//    if (this.x < 0 || this.x > X_BOUND || this.y < 0 || this.y > this.Y_BOUND) {
+//    JOptionPane.showMessageDialog(null, "Game Over :(");
+//    }
     this.x = START_X;
     this.y = START_Y;
     this.up = true;
     this.down = false;
     this.right = false;
     this.left = false;
-//    this.snekBody.removeAll(snekBody);
-//    for (JPanel jp : this.snekBody) {
-//      this.snekBody.remove(jp);
-//    }
-    for (int i = 1; i < snekBody.size(); i++) {
-      snekBody.remove(i);
-    }
+    
+    //remove all body parts from the snake
+    this.snekBody.removeAll(snekBody);
     this.snekBody.add(head);
     this.xCoords.removeAll(xCoords);
     this.yCoords.removeAll(yCoords);
     this.score = 0; //reset the score on restart
     this.scoreField.setText(Integer.toString(this.score));
+    
+    //remove all components from the game board
+    this.game.removeAll();
+    
+    //add back the head, listener, and get a target
+    game.add(head);
+    game.addKeyListener(this);
     this.getTarget();
+    this.game.updateUI();
+    
+    this.timer = 0;
     repaint();
     revalidate();
-    this.timer = 0;
     notifyAll();
   }
 
@@ -336,12 +335,52 @@ public class SnekMain extends JFrame implements KeyListener {
   
   //this method adds a body JPanel to the snake
   public void addBody(int x, int y) {
-    snekBody.add(new JPanel());
-    snekBody.get(snekBody.size() - 1).setBackground(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
-    snekBody.get(snekBody.size() - 1).setVisible(true);
-    snekBody.get(snekBody.size() - 1).setBounds(x, y, BODY_WIDTH, BODY_HEIGHT);
-    game.add(snekBody.get(this.snekBody.size() - 1));
+    for (int i = 0; i < 1; i++) {
+      snekBody.add(new JPanel());
+      snekBody.get(snekBody.size() - 1).setBackground(new Color(255, 60, 60));
+  //    snekBody.get(snekBody.size() - 1).setBackground(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
+      snekBody.get(snekBody.size() - 1).setVisible(true);
+      snekBody.get(snekBody.size() - 1).setBounds(x, y, BODY_WIDTH, BODY_HEIGHT);
+      game.add(snekBody.get(this.snekBody.size() - 1));
+    }
     repaint();
     revalidate();
   }
+  
+  public synchronized boolean eatTarget() {
+    if (((this.head.getX() >= this.targetX && this.head.getX() <= this.targetX + 10) && 
+          (this.head.getY() >= this.targetY && this.head.getY() <= this.targetY + 10)) || 
+        ((this.head.getX()+10 >= this.targetX && this.head.getX()+10 <= this.targetX + 10) && 
+            (this.head.getY() >= this.targetY && this.head.getY() <= this.targetY + 10)) ||
+        ((this.head.getX() >= this.targetX && this.head.getX() <= this.targetX + 10) && 
+            (this.head.getY()+10 >= this.targetY && this.head.getY()+10 <= this.targetY + 10)) ||
+        ((this.head.getX()+10 >= this.targetX && this.head.getX()+10 <= this.targetX + 10) && 
+            (this.head.getY()+10 >= this.targetY && this.head.getY()+10 <= this.targetY + 10))) {
+      notifyAll();
+      return true;
+    } else {
+      notifyAll();
+      return false;
+    }
+  }
+  
+  public synchronized boolean collision() {
+    for (int i = 4; i < snekBody.size() - 1; i++) {
+      if (((this.head.getX() >= snekBody.get(i).getX() && this.head.getX() <= snekBody.get(i).getX() + 10) && 
+          (this.head.getY() >= snekBody.get(i).getY() && this.head.getY() <= snekBody.get(i).getY() + 10)) || 
+        ((this.head.getX()+10 >= snekBody.get(i).getX() && this.head.getX()+10 <= snekBody.get(i).getX() + 10) && 
+            (this.head.getY() >= snekBody.get(i).getY() && this.head.getY() <= snekBody.get(i).getY() + 10)) ||
+        ((this.head.getX() >= snekBody.get(i).getX() && this.head.getX() <= snekBody.get(i).getX() + 10) && 
+            (this.head.getY()+10 >= snekBody.get(i).getY() && this.head.getY()+10 <= snekBody.get(i).getY() + 10)) ||
+        ((this.head.getX()+10 >= snekBody.get(i).getX() && this.head.getX()+10 <= snekBody.get(i).getX() + 10) && 
+            (this.head.getY()+10 >= snekBody.get(i).getY() && this.head.getY()+10 <= snekBody.get(i).getY() + 10))) {
+        System.out.println("COLLISION");
+        notifyAll();
+        return true;
+      } 
+    }
+    notifyAll();
+    return false;
+  }
+  
 }
