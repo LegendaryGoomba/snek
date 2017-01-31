@@ -2,7 +2,6 @@ package snek;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,26 +13,23 @@ import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 public class SnekMain extends JFrame implements KeyListener {
   // private variables
-  public static final Font SCORE_FONT = new Font("Courier", Font.ROMAN_BASELINE, 45);
-  public static final int START_X = 300;
-  public static final int START_Y = 550;
-  public static final int X_BOUND = 605;
-  public static final int Y_BOUND = 550;
-  public static final int BODY_WIDTH = 10;
-  public static final int BODY_HEIGHT = 10;
-  public static final int HEAD_WIDTH = 10;
-  public static final int HEAD_HEIGHT = 10;
+  public final Font SCORE_FONT = new Font("Courier", Font.ROMAN_BASELINE, 60);
+  public final int START_X = 300;
+  public final int START_Y = 567;
+  public final int X_BOUND = 607;
+  public final int Y_BOUND = 567;
+  public final int BODY_WIDTH = 10;
+  public final int BODY_HEIGHT = 10;
+  public final int HEAD_WIDTH = 10;
+  public final int HEAD_HEIGHT = 10;
   public int timer = 0;
-  public static int DIFFICULTY = 10;
+  public static int DIFFICULTY = 3;
   public JTextArea scoreField;
   public JPanel menu, game, head, body, target;
   public ArrayList<Integer> xCoords = new ArrayList<Integer>();
@@ -55,23 +51,31 @@ public class SnekMain extends JFrame implements KeyListener {
     // create the actionListener
     ActionListener al = new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public synchronized void actionPerformed(ActionEvent e) {
+          
         if (e.getSource() == easy) {
-          DIFFICULTY = 20;
+          DIFFICULTY = 10;
+          easy.setSelected(true);
           medium.setSelected(false);
           hard.setSelected(false);
-//          restart();
+          restart();
+          notifyAll();
         } else if (e.getSource() == medium) {
-          DIFFICULTY = 5;
-          easy.setSelected(false);
-          hard.setSelected(false);
-//          restart();
-        } else if (e.getSource() == hard) {
           DIFFICULTY = 3;
           easy.setSelected(false);
+          medium.setSelected(true);
+          hard.setSelected(false);
+          restart();
+          notifyAll();
+        } else if (e.getSource() == hard) {
+          DIFFICULTY = 2;
+          easy.setSelected(false);
           medium.setSelected(false);
-//          restart();
+          hard.setSelected(true);
+          restart();
+          notifyAll();
         } else if (e.getSource() == reset) {
+          notifyAll();
           restart();
         } else if (e.getSource() == close) {
           System.exit(0);
@@ -80,18 +84,22 @@ public class SnekMain extends JFrame implements KeyListener {
     };
     // create all the objects on the window
     this.setLayout(new BorderLayout());
-    menu = new JPanel(new GridLayout(6, 1));
+    menu = new JPanel(new GridLayout(10, 1));
     game = new JPanel();
     head = new JPanel();
     
     scoreField = new JTextArea(Integer.toString(this.score));
     scoreField.setFont(SCORE_FONT);
     
-    easy = new JRadioButton("Easy", true);
+//    dynamic = new JRadioButton("Dynamic");
+//    dynamic.addActionListener(al);
+//    dynamic.setFocusable(false);
+    
+    easy = new JRadioButton("Easy");
     easy.addActionListener(al);
     easy.setFocusable(false);
 
-    medium = new JRadioButton("Medium");
+    medium = new JRadioButton("Medium", true);
     medium.addActionListener(al);
     medium.setFocusable(false);
 
@@ -108,6 +116,7 @@ public class SnekMain extends JFrame implements KeyListener {
     reset.setFocusable(false);
 
     menu.add(scoreField);
+//    menu.add(dynamic);
     menu.add(easy);
     menu.add(medium);
     menu.add(hard);
@@ -182,16 +191,17 @@ public class SnekMain extends JFrame implements KeyListener {
   }
 
   @Override
-  public void keyReleased(KeyEvent e) {
+  public synchronized void keyReleased(KeyEvent e) {
+    notifyAll();
   }
 
   @Override
-  public void keyTyped(KeyEvent e) {
+  public synchronized void keyTyped(KeyEvent e) {
+    notifyAll();
   }// end keyListener
 
   // head moving up
   public synchronized void moveUp(int x, int y) {
-    
     timer++;
     while (!this.up) {
       try {
@@ -251,7 +261,6 @@ public class SnekMain extends JFrame implements KeyListener {
     for (int i = 0; i < snekBody.size(); i++) { 
       snekBody.get(i).setBounds(xCoords.get(timer-((i*10)+1)), yCoords.get(timer-((i*10)+1)), BODY_WIDTH, BODY_HEIGHT);
     }
-
     repaint();
     notifyAll();
     revalidate();
@@ -317,7 +326,7 @@ public class SnekMain extends JFrame implements KeyListener {
 
   // this method removes previous target and acquires a new target to consume
   // it also sets the score
-  public void getTarget() {
+  public synchronized void getTarget() {
     this.scoreField.setText(Integer.toString(this.score));
     try {
       game.remove(target);
@@ -331,20 +340,22 @@ public class SnekMain extends JFrame implements KeyListener {
     target.setBounds(targetX, targetY, 10, 10);
     target.setVisible(true);
     game.add(target);
+    notifyAll();
   }
   
   //this method adds a body JPanel to the snake
-  public void addBody(int x, int y) {
+  public synchronized void addBody() {
     for (int i = 0; i < 1; i++) {
       snekBody.add(new JPanel());
-      snekBody.get(snekBody.size() - 1).setBackground(new Color(255, 60, 60));
-  //    snekBody.get(snekBody.size() - 1).setBackground(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
+      snekBody.get(snekBody.size() - 1).setBackground(new Color(16,188,37));
+  //    snekBody.get(snekBody.size() - 1).setBackground(new Color(new Random().nextInt(255), 
+  //    new Random().nextInt(255), new Random().nextInt(255)));
       snekBody.get(snekBody.size() - 1).setVisible(true);
-      snekBody.get(snekBody.size() - 1).setBounds(x, y, BODY_WIDTH, BODY_HEIGHT);
       game.add(snekBody.get(this.snekBody.size() - 1));
     }
     repaint();
     revalidate();
+    notifyAll();
   }
   
   public synchronized boolean eatTarget() {
@@ -374,11 +385,11 @@ public class SnekMain extends JFrame implements KeyListener {
             (this.head.getY()+10 >= snekBody.get(i).getY() && this.head.getY()+10 <= snekBody.get(i).getY() + 10)) ||
         ((this.head.getX()+10 >= snekBody.get(i).getX() && this.head.getX()+10 <= snekBody.get(i).getX() + 10) && 
             (this.head.getY()+10 >= snekBody.get(i).getY() && this.head.getY()+10 <= snekBody.get(i).getY() + 10))) {
-        System.out.println("COLLISION");
+//        System.out.println("COLLISION");
         notifyAll();
         return true;
       } 
-    }
+    } 
     notifyAll();
     return false;
   }

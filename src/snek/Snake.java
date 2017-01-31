@@ -18,7 +18,7 @@ public class Snake implements Runnable {
       e.printStackTrace();
       System.exit(1);
     }
-    
+     
     while (snek.inGame) {
 //      System.out.println(snek.timer);
 //      System.out.println(snek.snekBody.size());
@@ -48,13 +48,13 @@ public class Snake implements Runnable {
 
       if(snek.eatTarget()) {
         if (snek.up) {
-          snek.addBody(snek.xCoords.get(snek.timer-3), snek.yCoords.get(snek.timer-3));
+          snek.addBody();
         } else if (snek.down) {
-          snek.addBody(snek.xCoords.get(snek.timer-3), snek.yCoords.get(snek.timer-3));
+          snek.addBody();
         } else if (snek.left) {
-          snek.addBody(snek.xCoords.get(snek.timer-3), snek.yCoords.get(snek.timer-3));
+          snek.addBody();
         } else if (snek.right) {
-          snek.addBody(snek.xCoords.get(snek.timer-3), snek.yCoords.get(snek.timer-3));
+          snek.addBody();
         }
         snek.score++;
         snek.getTarget();
@@ -65,7 +65,7 @@ public class Snake implements Runnable {
       }
       
       try {
-        Thread.sleep(snek.DIFFICULTY);
+        Thread.sleep(SnekMain.DIFFICULTY);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
