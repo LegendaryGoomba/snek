@@ -13,6 +13,7 @@ import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
@@ -188,6 +189,7 @@ public class SnekMain extends JFrame implements KeyListener {
     default:
       break;
     }//end switch
+    notifyAll();
   }
 
   @Override
@@ -392,6 +394,13 @@ public class SnekMain extends JFrame implements KeyListener {
     } 
     notifyAll();
     return false;
+  }
+  
+  public void scoreScreen() {
+//    inGame = false;
+    JOptionPane.showMessageDialog(null, "Score: " + score);
+//    inGame = true;
+//    notifyAll();
   }
   
 }

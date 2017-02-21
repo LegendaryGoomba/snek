@@ -13,7 +13,7 @@ public class Snake implements Runnable {
   @Override
   public void run() {
     try {
-      Thread.sleep(800);
+      Thread.sleep(1000);
     } catch (InterruptedException e) {
       e.printStackTrace();
       System.exit(1);
@@ -38,13 +38,14 @@ public class Snake implements Runnable {
       }
 
       // if you collide with the walls of the game
-      if (snek.y < 0 || snek.x < 0 || snek.y > snek.Y_BOUND || snek.x > snek.X_BOUND) {
-        // add colliding with the tail
+      if (snek.y < 0 || snek.x < 0 || snek.y > snek.Y_BOUND || snek.x > snek.X_BOUND || snek.collision()) {
+        // colliding with tail is a collision
+        snek.scoreScreen();
         snek.restart();
       }
 
       // if you eat the target
-      //only works for top left corner of head colliding with the target
+      //works for entire head panel
 
       if(snek.eatTarget()) {
         if (snek.up) {
@@ -60,17 +61,11 @@ public class Snake implements Runnable {
         snek.getTarget();
       }
       
-      if (snek.collision()) {
-        snek.restart();
-      }
-      
       try {
         Thread.sleep(SnekMain.DIFFICULTY);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-      
-      
     }//end while
   }
 }
